@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "next_block_id": 39,
+  "next_block_id": 46,
   "blocks": [
     {
       "type": "io",
@@ -67,8 +67,8 @@
     {
       "type": "io",
       "id": 5,
-      "x": 9.536743e-7,
-      "y": 1318.0,
+      "x": 0.0,
+      "y": 1561.0,
       "z": 0,
       "name": "RX",
       "port_id": 6,
@@ -89,7 +89,7 @@
       "id": 6,
       "z": 0,
       "x": 40.0,
-      "y": 1318.0,
+      "y": 1561.0,
       "parent_id": 5,
       "role": "output",
       "label": "RX",
@@ -99,8 +99,8 @@
       "type": "port",
       "id": 8,
       "z": 0,
-      "x": 692.0,
-      "y": 934.0,
+      "x": 718.0,
+      "y": 1081.0,
       "parent_id": 7,
       "role": "input",
       "label": "r_state",
@@ -110,8 +110,8 @@
       "type": "port",
       "id": 9,
       "z": 0,
-      "x": 692.0,
-      "y": 1030.0,
+      "x": 718.0,
+      "y": 1177.0,
       "parent_id": 7,
       "role": "input",
       "label": "data",
@@ -121,8 +121,8 @@
       "type": "port",
       "id": 10,
       "z": 0,
-      "x": 692.0,
-      "y": 1126.0,
+      "x": 718.0,
+      "y": 1273.0,
       "parent_id": 7,
       "role": "input",
       "label": "receive_counter",
@@ -132,8 +132,8 @@
       "type": "port",
       "id": 11,
       "z": 0,
-      "x": 692.0,
-      "y": 1222.0,
+      "x": 718.0,
+      "y": 1369.0,
       "parent_id": 7,
       "role": "input",
       "label": "stop_counter",
@@ -143,8 +143,19 @@
       "type": "port",
       "id": 12,
       "z": 0,
-      "x": 692.0,
-      "y": 1318.0,
+      "x": 718.0,
+      "y": 1465.0,
+      "parent_id": 7,
+      "role": "input",
+      "label": "baud_counter",
+      "bit_width": 1
+    },
+    {
+      "type": "port",
+      "id": 13,
+      "z": 0,
+      "x": 718.0,
+      "y": 1561.0,
       "parent_id": 7,
       "role": "input",
       "label": "RX",
@@ -152,10 +163,10 @@
     },
     {
       "type": "port",
-      "id": 13,
+      "id": 14,
       "z": 0,
-      "x": 1756.0,
-      "y": 982.0,
+      "x": 1859.0,
+      "y": 1081.0,
       "parent_id": 7,
       "role": "output",
       "label": "r_next_state",
@@ -163,10 +174,10 @@
     },
     {
       "type": "port",
-      "id": 14,
+      "id": 15,
       "z": 0,
-      "x": 1756.0,
-      "y": 1078.0,
+      "x": 1859.0,
+      "y": 1177.0,
       "parent_id": 7,
       "role": "output",
       "label": "data_next",
@@ -174,10 +185,10 @@
     },
     {
       "type": "port",
-      "id": 15,
+      "id": 16,
       "z": 0,
-      "x": 1756.0,
-      "y": 1174.0,
+      "x": 1859.0,
+      "y": 1273.0,
       "parent_id": 7,
       "role": "output",
       "label": "receive_counter_next",
@@ -185,23 +196,46 @@
     },
     {
       "type": "port",
-      "id": 16,
+      "id": 17,
       "z": 0,
-      "x": 1756.0,
-      "y": 1270.0,
+      "x": 1859.0,
+      "y": 1369.0,
       "parent_id": 7,
       "role": "output",
       "label": "stop_counter_next",
       "bit_width": 2
     },
     {
+      "type": "port",
+      "id": 18,
+      "z": 0,
+      "x": 1859.0,
+      "y": 1465.0,
+      "parent_id": 7,
+      "role": "output",
+      "label": "baud_counter_next",
+      "bit_width": 1
+    },
+    {
+      "type": "port",
+      "id": 19,
+      "z": 0,
+      "x": 1859.0,
+      "y": 1561.0,
+      "parent_id": 7,
+      "role": "output",
+      "label": "bit_tick",
+      "bit_width": 1,
+      "is_state": true
+    },
+    {
       "type": "code",
       "id": 7,
-      "x": 692.0,
+      "x": 718.0,
       "y": 642.0,
       "z": 0,
-      "width": 1064.0,
-      "height": 968.0,
+      "width": 1141.0,
+      "height": 1358.0,
       "color": [
         0.85,
         0.92,
@@ -210,132 +244,157 @@
       ],
       "role": "comb",
       "title": "next_receive_state",
-      "code": "always_comb begin: next_receive_state\n        r_next_state = r_state;\n        data_next = data;\n        receive_counter_next = receive_counter;\n        stop_counter_next = stop_counter;\n\n        case (r_state)\n            IDLE: begin\n                if (RX == 1'b0) begin\n                    r_next_state = RECEIVE;\n                    receive_counter_next = 'b0;\n                end\n            end\n            RECEIVE: begin\n                if (receive_counter < 'd7) begin // after 8 bits received\n                    data_next = {RX, data[62:0]}; // TODO check endianness here!\n                    r_next_state = RECEIVE;\n                    stop_\n                end else begin\n                    r_next_state = CHECK;\n                end\n            end\n            CHECK: begin\n                // what do we do here?\n                r_next_state = STOP;\n            end\n            STOP: begin\n                if (stop_counter < 'd2) begin\n                    r_next_state = STOP;\n                    stop_counter_next = stop_counter + 1;\n                end else begin\n                    r_next_state = IDLE;\n                end\n            end\n        endcase\n    end",
+      "code": "always_comb begin: next_receive_state\n        r_next_state = r_state;\n        data_next = data;\n        receive_counter_next = receive_counter;\n        stop_counter_next = stop_counter;\n\n        if (baud_counter == CYCLES_PER_BIT - 1) begin\n            baud_counter_next = '0;\n            bit_tick = 1'b1;\n        end else begin\n            baud_counter_next = baud_counter + 1;\n            bit_tick = 1'b0;\n        end\n\n        case (r_state)\n            IDLE: begin\n                if (RX == 1'b0) begin\n                    r_next_state = RECEIVE;\n                    receive_counter_next = '0;\n                    baud_counter_next = '0; // resync to the edge\n                end\n            end\n\n            RECEIVE: begin\n                if (bit_tick) begin\n                    if (receive_counter < 8) begin\n                        data_next = {RX, data[7:1]};\n                        receive_counter_next = receive_counter + 1;\n                    end\n                    if (receive_counter == 7) r_next_state = CHECK;\n                end\n            end\n\n            CHECK: begin\n                if (bit_tick) begin\n                    r_next_state = STOP;\n                end\n            end\n\n            STOP: begin\n                if (bit_tick) begin\n                    if (stop_counter < 1) begin  // 2 stop bits total, counting 0 and 1\n                        stop_counter_next = stop_counter + 1;\n                    end else begin\n                        r_next_state = IDLE;\n                        stop_counter_next = '0;\n                    end\n                end\n            end\n        endcase\n    end",
       "block_kind": "combinational",
       "input_port_ids": [
         8,
         9,
         10,
         11,
-        12
+        12,
+        13
       ],
       "output_port_ids": [
-        13,
         14,
         15,
-        16
+        16,
+        17,
+        18,
+        19
       ],
-      "source_start": 973,
-      "source_end": 2194,
+      "source_start": 1390,
+      "source_end": 3019,
       "user_placed": false
     },
     {
       "type": "port",
-      "id": 18,
+      "id": 21,
       "z": 0,
-      "x": 2512.0,
-      "y": 899.0,
-      "parent_id": 17,
+      "x": 2641.0,
+      "y": 899.75,
+      "parent_id": 20,
       "role": "input",
       "label": "RST",
       "bit_width": 1
     },
     {
       "type": "port",
-      "id": 19,
+      "id": 22,
       "z": 0,
-      "x": 2512.0,
-      "y": 988.5,
-      "parent_id": 17,
+      "x": 2641.0,
+      "y": 992.25,
+      "parent_id": 20,
+      "role": "input",
+      "label": "baud_counter_next",
+      "bit_width": 1
+    },
+    {
+      "type": "port",
+      "id": 23,
+      "z": 0,
+      "x": 2641.0,
+      "y": 1084.5,
+      "parent_id": 20,
       "role": "input",
       "label": "r_next_state",
       "bit_width": 2
     },
     {
       "type": "port",
-      "id": 20,
+      "id": 24,
       "z": 0,
-      "x": 2512.0,
-      "y": 1077.9996,
-      "parent_id": 17,
+      "x": 2641.0,
+      "y": 1177.0,
+      "parent_id": 20,
       "role": "input",
       "label": "data_next",
       "bit_width": 64
     },
     {
       "type": "port",
-      "id": 21,
+      "id": 25,
       "z": 0,
-      "x": 2512.0,
-      "y": 1167.4996,
-      "parent_id": 17,
+      "x": 2641.0,
+      "y": 1269.25,
+      "parent_id": 20,
       "role": "input",
       "label": "receive_counter_next",
       "bit_width": 4
     },
     {
       "type": "port",
-      "id": 22,
+      "id": 26,
       "z": 0,
-      "x": 2512.0,
-      "y": 1256.9996,
-      "parent_id": 17,
+      "x": 2641.0,
+      "y": 1361.75,
+      "parent_id": 20,
       "role": "input",
       "label": "stop_counter_next",
       "bit_width": 2
     },
     {
       "type": "port",
-      "id": 23,
+      "id": 27,
       "z": 0,
-      "x": 3268.0,
-      "y": 934.0,
-      "parent_id": 17,
+      "x": 3397.0,
+      "y": 938.75,
+      "parent_id": 20,
+      "role": "output",
+      "label": "baud_counter",
+      "bit_width": 1
+    },
+    {
+      "type": "port",
+      "id": 28,
+      "z": 0,
+      "x": 3397.0,
+      "y": 1034.75,
+      "parent_id": 20,
       "role": "output",
       "label": "r_state",
       "bit_width": 2
     },
     {
       "type": "port",
-      "id": 24,
+      "id": 29,
       "z": 0,
-      "x": 3268.0,
-      "y": 1029.9998,
-      "parent_id": 17,
+      "x": 3397.0,
+      "y": 1130.75,
+      "parent_id": 20,
       "role": "output",
       "label": "data",
       "bit_width": 64
     },
     {
       "type": "port",
-      "id": 25,
+      "id": 30,
       "z": 0,
-      "x": 3268.0,
-      "y": 1125.9996,
-      "parent_id": 17,
+      "x": 3397.0,
+      "y": 1226.75,
+      "parent_id": 20,
       "role": "output",
       "label": "receive_counter",
       "bit_width": 4
     },
     {
       "type": "port",
-      "id": 26,
+      "id": 31,
       "z": 0,
-      "x": 3268.0,
-      "y": 1221.9996,
-      "parent_id": 17,
+      "x": 3397.0,
+      "y": 1322.75,
+      "parent_id": 20,
       "role": "output",
       "label": "stop_counter",
       "bit_width": 2
     },
     {
       "type": "code",
-      "id": 17,
-      "x": 2512.0,
-      "y": 867.0,
+      "id": 20,
+      "x": 2641.0,
+      "y": 867.75,
       "z": 0,
       "width": 756.0,
-      "height": 422.0,
+      "height": 526.0,
       "color": [
         1.0,
         0.88,
@@ -344,33 +403,35 @@
       ],
       "role": "ff",
       "title": "next_receive_ff",
-      "code": "always_ff @(posedge CLK, posedge RST) begin: next_receive_ff\n        if (RST == 1'b1) begin\n            r_state <= IDLE;\n            \n            data <= 'b0;\n            receive_counter <= 'b0;\n\n            stop_counter <= 'b0;\n        end else begin\n            r_state <= r_next_state;\n            data <= data_next;\n            receive_counter <= receive_counter_next;\n            stop_counter <= stop_counter_next;\n        end\n    end",
+      "code": "always_ff @(posedge CLK, posedge RST) begin: next_receive_ff\n        if (RST == 1'b1) begin\n            baud_counter <= 'b0;\n\n            r_state <= IDLE;\n            \n            data <= 'b0;\n            receive_counter <= 'b0;\n\n            stop_counter <= 'b0;\n        end else begin\n            baud_counter <= baud_counter_next;\n\n            r_state <= r_next_state;\n            data <= data_next;\n            receive_counter <= receive_counter_next;\n            stop_counter <= stop_counter_next;\n        end\n    end",
       "block_kind": "flip_flop",
       "input_port_ids": [
-        18,
-        19,
-        20,
         21,
-        22
-      ],
-      "output_port_ids": [
+        22,
         23,
         24,
         25,
         26
       ],
-      "source_start": 528,
-      "source_end": 972,
+      "output_port_ids": [
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "source_start": 863,
+      "source_end": 1389,
       "user_placed": false
     },
     {
       "type": "io",
-      "id": 27,
-      "x": 3852.0,
+      "id": 32,
+      "x": 4007.0,
       "y": 200.0,
       "z": 0,
       "name": "TX",
-      "port_id": 28,
+      "port_id": 33,
       "color": [
         1.0,
         0.7,
@@ -385,183 +446,38 @@
     },
     {
       "type": "port",
-      "id": 28,
+      "id": 33,
       "z": 0,
-      "x": 3812.0,
+      "x": 3967.0,
       "y": 200.0,
-      "parent_id": 27,
+      "parent_id": 32,
       "role": "input",
       "label": "TX",
       "bit_width": 1
     },
     {
       "type": "wire",
-      "id": 29,
+      "id": 34,
       "z": 0,
-      "from_port_block": 23,
+      "from_port_block": 28,
       "to_port_block": 8,
       "bit_width": 2,
       "vertices": [
         [
-          3584.0,
-          934.0
+          3739.0,
+          1034.75
         ],
         [
-          3584.0,
-          -96.0
-        ],
-        [
-          350.0,
-          -96.0
-        ],
-        [
-          350.0,
-          934.0
-        ]
-      ],
-      "name": "",
-      "color": [
-        0.47,
-        0.47,
-        0.47,
-        1.0
-      ],
-      "auto_routed": true
-    },
-    {
-      "type": "wire",
-      "id": 30,
-      "z": 0,
-      "from_port_block": 24,
-      "to_port_block": 9,
-      "bit_width": 64,
-      "vertices": [
-        [
-          3610.0,
-          1030.0
-        ],
-        [
-          3610.0,
+          3739.0,
           -132.0
         ],
         [
-          324.0,
+          298.0,
           -132.0
         ],
         [
-          324.0,
-          1030.0
-        ]
-      ],
-      "name": "",
-      "color": [
-        0.47,
-        0.47,
-        0.47,
-        1.0
-      ],
-      "auto_routed": true
-    },
-    {
-      "type": "wire",
-      "id": 31,
-      "z": 0,
-      "from_port_block": 25,
-      "to_port_block": 10,
-      "bit_width": 4,
-      "vertices": [
-        [
-          3636.0,
-          1126.0
-        ],
-        [
-          3636.0,
-          -168.0
-        ],
-        [
           298.0,
-          -168.0
-        ],
-        [
-          298.0,
-          1126.0
-        ]
-      ],
-      "name": "",
-      "color": [
-        0.47,
-        0.47,
-        0.47,
-        1.0
-      ],
-      "auto_routed": true
-    },
-    {
-      "type": "wire",
-      "id": 32,
-      "z": 0,
-      "from_port_block": 26,
-      "to_port_block": 11,
-      "bit_width": 2,
-      "vertices": [
-        [
-          3662.0,
-          1222.0
-        ],
-        [
-          3662.0,
-          -204.0
-        ],
-        [
-          272.0,
-          -204.0
-        ],
-        [
-          272.0,
-          1222.0
-        ]
-      ],
-      "name": "",
-      "color": [
-        0.47,
-        0.47,
-        0.47,
-        1.0
-      ],
-      "auto_routed": true
-    },
-    {
-      "type": "wire",
-      "id": 33,
-      "z": 0,
-      "from_port_block": 6,
-      "to_port_block": 12,
-      "bit_width": 1,
-      "vertices": [],
-      "name": "",
-      "color": [
-        0.47,
-        0.47,
-        0.47,
-        1.0
-      ],
-      "auto_routed": true
-    },
-    {
-      "type": "wire",
-      "id": 34,
-      "z": 0,
-      "from_port_block": 4,
-      "to_port_block": 18,
-      "bit_width": 1,
-      "vertices": [
-        [
-          2134.0,
-          532.0
-        ],
-        [
-          2134.0,
-          899.0
+          1081.0
         ]
       ],
       "name": "",
@@ -577,17 +493,25 @@
       "type": "wire",
       "id": 35,
       "z": 0,
-      "from_port_block": 13,
-      "to_port_block": 19,
-      "bit_width": 2,
+      "from_port_block": 29,
+      "to_port_block": 9,
+      "bit_width": 64,
       "vertices": [
         [
-          2134.0,
-          982.0
+          3765.0,
+          1130.75
         ],
         [
-          2134.0,
-          988.5
+          3765.0,
+          -168.0
+        ],
+        [
+          272.0,
+          -168.0
+        ],
+        [
+          272.0,
+          1177.0
         ]
       ],
       "name": "",
@@ -603,10 +527,27 @@
       "type": "wire",
       "id": 36,
       "z": 0,
-      "from_port_block": 14,
-      "to_port_block": 20,
-      "bit_width": 64,
-      "vertices": [],
+      "from_port_block": 30,
+      "to_port_block": 10,
+      "bit_width": 4,
+      "vertices": [
+        [
+          3791.0,
+          1226.75
+        ],
+        [
+          3791.0,
+          -204.0
+        ],
+        [
+          402.0,
+          -204.0
+        ],
+        [
+          402.0,
+          1273.0
+        ]
+      ],
       "name": "",
       "color": [
         0.47,
@@ -620,17 +561,25 @@
       "type": "wire",
       "id": 37,
       "z": 0,
-      "from_port_block": 15,
-      "to_port_block": 21,
-      "bit_width": 4,
+      "from_port_block": 31,
+      "to_port_block": 11,
+      "bit_width": 2,
       "vertices": [
         [
-          2134.0,
-          1174.0
+          3817.0,
+          1322.75
         ],
         [
-          2134.0,
-          1167.5
+          3817.0,
+          -240.0
+        ],
+        [
+          376.0,
+          -240.0
+        ],
+        [
+          376.0,
+          1369.0
         ]
       ],
       "name": "",
@@ -646,17 +595,189 @@
       "type": "wire",
       "id": 38,
       "z": 0,
-      "from_port_block": 16,
+      "from_port_block": 27,
+      "to_port_block": 12,
+      "bit_width": 1,
+      "vertices": [
+        [
+          3713.0,
+          938.75
+        ],
+        [
+          3713.0,
+          -96.0
+        ],
+        [
+          350.0,
+          -96.0
+        ],
+        [
+          350.0,
+          1465.0
+        ]
+      ],
+      "name": "",
+      "color": [
+        0.47,
+        0.47,
+        0.47,
+        1.0
+      ],
+      "auto_routed": true
+    },
+    {
+      "type": "wire",
+      "id": 39,
+      "z": 0,
+      "from_port_block": 6,
+      "to_port_block": 13,
+      "bit_width": 1,
+      "vertices": [],
+      "name": "",
+      "color": [
+        0.47,
+        0.47,
+        0.47,
+        1.0
+      ],
+      "auto_routed": true
+    },
+    {
+      "type": "wire",
+      "id": 40,
+      "z": 0,
+      "from_port_block": 4,
+      "to_port_block": 21,
+      "bit_width": 1,
+      "vertices": [
+        [
+          2237.0,
+          532.0
+        ],
+        [
+          2237.0,
+          899.75
+        ]
+      ],
+      "name": "",
+      "color": [
+        0.47,
+        0.47,
+        0.47,
+        1.0
+      ],
+      "auto_routed": true
+    },
+    {
+      "type": "wire",
+      "id": 41,
+      "z": 0,
+      "from_port_block": 18,
       "to_port_block": 22,
+      "bit_width": 1,
+      "vertices": [
+        [
+          2263.0,
+          1465.0
+        ],
+        [
+          2263.0,
+          992.25
+        ]
+      ],
+      "name": "",
+      "color": [
+        0.47,
+        0.47,
+        0.47,
+        1.0
+      ],
+      "auto_routed": true
+    },
+    {
+      "type": "wire",
+      "id": 42,
+      "z": 0,
+      "from_port_block": 14,
+      "to_port_block": 23,
       "bit_width": 2,
       "vertices": [
         [
-          2134.0,
-          1270.0
+          2237.0,
+          1081.0
         ],
         [
-          2134.0,
-          1257.0
+          2237.0,
+          1084.5
+        ]
+      ],
+      "name": "",
+      "color": [
+        0.47,
+        0.47,
+        0.47,
+        1.0
+      ],
+      "auto_routed": true
+    },
+    {
+      "type": "wire",
+      "id": 43,
+      "z": 0,
+      "from_port_block": 15,
+      "to_port_block": 24,
+      "bit_width": 64,
+      "vertices": [],
+      "name": "",
+      "color": [
+        0.47,
+        0.47,
+        0.47,
+        1.0
+      ],
+      "auto_routed": true
+    },
+    {
+      "type": "wire",
+      "id": 44,
+      "z": 0,
+      "from_port_block": 16,
+      "to_port_block": 25,
+      "bit_width": 4,
+      "vertices": [
+        [
+          2237.0,
+          1273.0
+        ],
+        [
+          2237.0,
+          1269.25
+        ]
+      ],
+      "name": "",
+      "color": [
+        0.47,
+        0.47,
+        0.47,
+        1.0
+      ],
+      "auto_routed": true
+    },
+    {
+      "type": "wire",
+      "id": 45,
+      "z": 0,
+      "from_port_block": 17,
+      "to_port_block": 26,
+      "bit_width": 2,
+      "vertices": [
+        [
+          2237.0,
+          1369.0
+        ],
+        [
+          2237.0,
+          1361.75
         ]
       ],
       "name": "",

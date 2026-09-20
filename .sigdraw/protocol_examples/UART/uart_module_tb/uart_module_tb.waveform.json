@@ -1,0 +1,18 @@
+{
+  "nameColWidth": 220,
+  "valueColWidth": 175,
+  "radices": {
+    "u_uart_module.data": "hex",
+    "u_uart_module.rx_tick": "dec",
+    "u_uart_module.rx_tick_next": "dec",
+    "u_uart_module.data_next": "hex"
+  },
+  "hidden": [],
+  "order": [],
+  "colors": {
+    "u_uart_module.r_state": "#c79100",
+    "u_uart_module.RX": "#1e8e3e"
+  },
+  "groups": [],
+  "collapsedScopes": []
+}
