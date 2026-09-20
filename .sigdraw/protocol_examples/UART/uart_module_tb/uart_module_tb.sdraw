@@ -1,0 +1,271 @@
+{
+  "version": 1,
+  "next_block_id": 18,
+  "blocks": [
+    {
+      "type": "port",
+      "id": 2,
+      "z": 0,
+      "x": 1077.0,
+      "y": 170.0,
+      "parent_id": 1,
+      "role": "output",
+      "label": "CLK",
+      "bit_width": 1,
+      "is_state": true
+    },
+    {
+      "type": "code",
+      "id": 1,
+      "x": 552.0,
+      "y": 100.0,
+      "z": 0,
+      "width": 525.0,
+      "height": 140.0,
+      "color": [
+        0.85,
+        0.92,
+        1.0,
+        1.0
+      ],
+      "role": "comb",
+      "title": "always",
+      "code": "always #(CLK_PERIOD/2) CLK = ~CLK;",
+      "block_kind": "combinational",
+      "input_port_ids": [],
+      "output_port_ids": [
+        2
+      ],
+      "source_start": 1083,
+      "source_end": 1122,
+      "user_placed": false
+    },
+    {
+      "type": "code",
+      "id": 3,
+      "x": 552.0,
+      "y": 460.0,
+      "z": 0,
+      "width": 624.0,
+      "height": 140.0,
+      "color": [
+        0.85,
+        0.96,
+        0.86,
+        1.0
+      ],
+      "role": "initial",
+      "title": "initial",
+      "code": "initial begin\n        $dumpfile(\"uart_module_tb.vcd\");\n        $dumpvars(0, uart_module_tb);\n    end",
+      "block_kind": "combinational",
+      "input_port_ids": [],
+      "output_port_ids": [],
+      "source_start": 324,
+      "source_end": 429,
+      "user_placed": false
+    },
+    {
+      "type": "port",
+      "id": 5,
+      "z": 0,
+      "x": 1066.0,
+      "y": 1113.0,
+      "parent_id": 4,
+      "role": "output",
+      "label": "RST",
+      "bit_width": 1
+    },
+    {
+      "type": "port",
+      "id": 6,
+      "z": 0,
+      "x": 1066.0,
+      "y": 1209.0,
+      "parent_id": 4,
+      "role": "output",
+      "label": "TX",
+      "bit_width": 1
+    },
+    {
+      "type": "code",
+      "id": 4,
+      "x": 552.0,
+      "y": 820.0,
+      "z": 0,
+      "width": 514.0,
+      "height": 682.0,
+      "color": [
+        0.85,
+        0.96,
+        0.86,
+        1.0
+      ],
+      "role": "initial",
+      "title": "initial",
+      "code": "initial begin\n        \n        RST = 1;\n        TX  = 1; // idle high\n\n        #10;\n        RST = 0; // reset DUT\n        #10;\n\n        send_uart_byte(8'hA5);\n        send_uart_byte(8'h47);\n        send_uart_byte(8'h80);\n        send_uart_byte(8'hF0);\n        send_uart_byte(8'h01);\n        send_uart_byte(8'h2F);\n        send_uart_byte(8'hA2);\n        send_uart_byte(8'hC1);\n        send_uart_byte(8'h64);\n\n        #(BIT_PERIOD * 2);\n\n\n\n        $finish;\n    end",
+      "block_kind": "combinational",
+      "input_port_ids": [],
+      "output_port_ids": [
+        5,
+        6,
+        17
+      ],
+      "source_start": 1123,
+      "source_end": 1598,
+      "user_placed": false
+    },
+    {
+      "type": "port",
+      "id": 8,
+      "z": 0,
+      "x": 1616.0,
+      "y": 1055.0,
+      "parent_id": 7,
+      "role": "input",
+      "label": "CLK",
+      "bit_width": 1
+    },
+    {
+      "type": "port",
+      "id": 9,
+      "z": 0,
+      "x": 1616.0,
+      "y": 1113.0,
+      "parent_id": 7,
+      "role": "input",
+      "label": "RST",
+      "bit_width": 1
+    },
+    {
+      "type": "port",
+      "id": 10,
+      "z": 0,
+      "x": 1616.0,
+      "y": 1171.0,
+      "parent_id": 7,
+      "role": "input",
+      "label": "TX",
+      "bit_width": 1
+    },
+    {
+      "type": "port",
+      "id": 11,
+      "z": 0,
+      "x": 2053.0,
+      "y": 1113.0,
+      "parent_id": 7,
+      "role": "output",
+      "label": "RX",
+      "bit_width": 1
+    },
+    {
+      "type": "instance",
+      "id": 7,
+      "x": 1616.0,
+      "y": 1023.0,
+      "z": 0,
+      "width": 437.0,
+      "height": 180.0,
+      "color": [
+        0.66,
+        0.55,
+        1.0,
+        1.0
+      ],
+      "instance_name": "u_uart_module",
+      "module_name": "uart_module",
+      "input_port_ids": [
+        8,
+        9,
+        10
+      ],
+      "output_port_ids": [
+        11
+      ],
+      "source_start": 459,
+      "source_end": 569,
+      "resolved": true,
+      "user_placed": false
+    },
+    {
+      "type": "wire",
+      "id": 12,
+      "z": 0,
+      "from_port_block": 2,
+      "to_port_block": 8,
+      "bit_width": 1,
+      "vertices": [
+        [
+          1396.0,
+          170.0
+        ],
+        [
+          1396.0,
+          1055.0
+        ]
+      ],
+      "name": "",
+      "color": [
+        0.47,
+        0.47,
+        0.47,
+        1.0
+      ],
+      "auto_routed": true
+    },
+    {
+      "type": "wire",
+      "id": 13,
+      "z": 0,
+      "from_port_block": 5,
+      "to_port_block": 9,
+      "bit_width": 1,
+      "vertices": [],
+      "name": "",
+      "color": [
+        0.47,
+        0.47,
+        0.47,
+        1.0
+      ],
+      "auto_routed": true
+    },
+    {
+      "type": "wire",
+      "id": 14,
+      "z": 0,
+      "from_port_block": 6,
+      "to_port_block": 10,
+      "bit_width": 1,
+      "vertices": [
+        [
+          1396.0,
+          1209.0
+        ],
+        [
+          1396.0,
+          1171.0
+        ]
+      ],
+      "name": "",
+      "color": [
+        0.47,
+        0.47,
+        0.47,
+        1.0
+      ],
+      "auto_routed": true
+    },
+    {
+      "type": "port",
+      "id": 17,
+      "z": 1,
+      "x": 1066.0,
+      "y": 1237.0,
+      "parent_id": 4,
+      "role": "output",
+      "label": "CLK",
+      "bit_width": 1
+    }
+  ]
+}

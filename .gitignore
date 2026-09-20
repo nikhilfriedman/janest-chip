@@ -1,0 +1,8 @@
+waves/uart_module_tb/
+
+# generated simulation output
+*.vcd
+.sigdraw/sim-data/
+
+# drawio autosaves
+.$*.drawio.bkp

@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "testbenches": [
+    {
+      "sourcePath": "janest-chip/protocol_examples/UART/uart_module_tb.sv",
+      "moduleName": "uart_module_tb",
+      "engine": "iverilog",
+      "dump": {
+        "dir": "waves/uart_module_tb",
+        "depth": 0,
+        "stablePath": "waves/uart_module_tb/uart_module_tb.vcd",
+        "sourceManaged": false
+      }
+    }
+  ]
+}

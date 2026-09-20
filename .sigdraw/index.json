@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "rootPath": "janest-chip",
+  "entries": [
+    {
+      "sourcePath": "janest-chip/protocol_examples/UART/uart_module_tb.sv",
+      "moduleName": "uart_module_tb",
+      "diagramPath": "janest-chip/.sigdraw/protocol_examples/UART/uart_module_tb/uart_module_tb.sdraw",
+      "line_start": 8,
+      "line_end": 75,
+      "offset_start": 143,
+      "offset_end": 1524,
+      "generatedAt": 1789860861215
+    },
+    {
+      "sourcePath": "janest-chip/protocol_examples/UART/uart_module.sv",
+      "moduleName": "uart_module",
+      "diagramPath": "janest-chip/.sigdraw/protocol_examples/UART/uart_module/uart_module.sdraw",
+      "line_start": 6,
+      "line_end": 82,
+      "offset_start": 125,
+      "offset_end": 2204,
+      "generatedAt": 1789862746322
+    }
+  ]
+}
